@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classroom Manager</title>
+
+    <script src="../scripts/external/jquery-3.1.1.min.js"></script>
+    <script src="../scripts/external/jquery-ui.js"></script>
+    <script src="../scripts/external/bootstrap.min.js"></script>
+    <script src="../scripts/external/bootstrap-toggle.min.js"></script>
+    <script src="../scripts/external/bootbox.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/site.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-toggle.min.css">
+</head>
+<body>
+    <div id="dashboard">
+        <div id="topPanel">Classroom manager
+            <div id="topPanelContainer">
+                <input type="button" class="btn btn-primary" id="saveButton" value="Save">
+                <input type="checkbox" id="autosaveToggle" checked data-toggle="toggle" data-size="normal" data-on="Autosave on" data-off="Autosave off" data-onstyle="success">
+            </div>
+        </div>
+        <div id="gridPanel">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th id="idHead">Id</th>
+                        <th id="firstNameHead">First name</th>
+                        <th id="lastNameHead">Last name</th>
+                        <th id="dateHead">Date</th>
+                        <th id="timeHead">Time</th>
+                        <th id="gpaHead">GPA</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="bottomPanel">
+            <div id="leftButtonsContainer">
+                <input type="button" class="buttons btn btn-warning" id="changePasswordButton" value="Change password">
+            </div>
+            <div id="rightButtonsContainer">
+                <input type="button" class="buttons btn btn-success active" id="addStudentButton" value="Add">
+                <input type="button" class="buttons btn btn-warning disabled" id="editStudentButton" value="Edit">
+                <input type="button" class="buttons btn btn-danger disabled" id="deleteStudentButton" value="Delete">
+            </div>
+        </div>
+    </div>
+    <script>
+        var login = localStorage.getItem("login");
+        var password = localStorage.getItem("password");
+
+        if(!login && !password) {
+            localStorage.setItem("login", '1');
+            localStorage.setItem('password', '1');
+        }
+
+        $('#dashboard').css('opacity', 0);
+
+        bootbox.dialog({
+            title: "Welcome to the classroom Manager",
+            message: "<div>" +
+            "<form>" +
+            "<div class='form-group' id='loginDiv'>" +
+            "<label for='loginInput'>Login:</label>" +
+            "<input type='text' class='form-control' id='loginInput'>" +
+            "</div>" +
+            "<div class='form-group' id='passwordDiv'>" +
+            "<label for='passwordInput'>Password:</label>" +
+            "<input type='password' class='form-control' id='passwordInput'>" +
+            "</div>" +
+            "</form>" +
+            "</div>",
+            buttons: {
+                success : {
+                    label: "Log in",
+                    className: "btn-primary",
+                    callback: function () {
+                        var log = $('#loginInput').val();
+                        var pass = $('#passwordInput').val();
+                        if(log && pass && log == login && pass == password) {
+                            $('#dashboard').css('opacity', 1);
+                        } else {
+                            if((!log || log != login) && pass && pass == password) {
+                                $('#loginDiv').addClass('has-error');
+                            } else if(log && log == login && (!pass || pass != password)) {
+                                $('#passwordDiv').addClass('has-error');
+                            } else if((!log || log != login) && (!pass || pass != password)) {
+                                $('#loginDiv').addClass('has-error');
+                                $('#passwordDiv').addClass('has-error');
+                            }
+                            return false;
+                        }
+                    }.bind(this)
+                }
+            }
+        });
+    </script>
+    <script src="../scripts/main.js"></script>
+</body>
+</html>
